@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V Live - بث مباشر للمباريات</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- مكتبة أيقونات FontAwesome لتزيين الموقع -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- الهيدر العلوي للموقع -->
+    <header class="main-header">
+        <div class="logo">
+            <i class="fa-solid fa-circle-play neon-icon"></i>
+            <span>V <span class="highlight">Live</span></span>
+        </div>
+        <div class="live-badge"><i class="fa-solid fa-broadcast-tower"></i> مباشر الآن</div>
+    </header>
+
+    <!-- الحاوية الرئيسية للجدول -->
+    <main class="container">
+        <section class="matches-section">
+            <h2 class="section-title"><i class="fa-regular fa-calendar-days"></i> مباريات اليوم</h2>
+            
+            <!-- هذا المربع سيتم ملؤه بالمباريات تلقائياً عبر السكربت -->
+            <div class="matches-grid" id="matchesContainer"></div>
+        </section>
+    </main>
+
+    <!-- ربط ملف الجافاسكربت -->
+    <script src="script.js"></script>
+</body>
+</html>
