@@ -3,33 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V Live - بث مباشر للمباريات</title>
+    <title>V Scans - موقع مشاهدة الأنمي</title>
     <link rel="stylesheet" href="style.css">
-    <!-- مكتبة أيقونات FontAwesome لتزيين الموقع -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- الهيدر العلوي للموقع -->
-    <header class="main-header">
-        <div class="logo">
-            <i class="fa-solid fa-circle-play neon-icon"></i>
-            <span>V <span class="highlight">Live</span></span>
-        </div>
-        <div class="live-badge"><i class="fa-solid fa-broadcast-tower"></i> مباشر الآن</div>
+    <header class="header">
+        <div class="logo">V <span>Anime</span></div>
     </header>
 
-    <!-- الحاوية الرئيسية للجدول -->
     <main class="container">
-        <section class="matches-section">
-            <h2 class="section-title"><i class="fa-regular fa-calendar-days"></i> مباريات اليوم</h2>
-            
-            <!-- هذا المربع سيتم ملؤه بالمباريات تلقائياً عبر السكربت -->
-            <div class="matches-grid" id="matchesContainer"></div>
-        </section>
+        <h2 class="title">مكتبة الأنمي المتاحة</h2>
+        <div class="anime-grid" id="animeContainer"></div>
     </main>
 
-    <!-- ربط ملف الجافاسكربت -->
     <script src="script.js"></script>
 </body>
 </html>
