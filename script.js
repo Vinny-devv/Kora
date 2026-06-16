@@ -23,19 +23,21 @@ async function fetchGlobalAnime() {
         container.innerHTML = ""; 
 
         animeList.forEach(anime => {
+            // جلب الاسم الرئيسي للأنمي والبوستر
             const animeTitle = anime.title_english || anime.title;
             const animeImage = anime.images.jpg.image_url;
             const score = anime.score ? `⭐ ${anime.score}` : "⭐ N/A";
-            
-            // التعديل السحري: نقل الزائر لصفحتك الداخلية watch.html مع إرسال الـ ID والاسم والصورة
-            const localWatchUrl = `watch.html?id=${anime.mal_id}&title=${encodeURIComponent(animeTitle)}&img=${encodeURIComponent(animeImage)}`; 
+            const animeId = anime.mal_id;
 
+            // كود البطاقة المعدل: إزالة href تماماً واستخدام إجبار الانتقال الداخلي onclick
             const cardHtml = `
-                <a href="${localWatchUrl}" class="anime-card" style="position: relative;">
+                <div class="anime-card" 
+                     style="position: relative; cursor: pointer;" 
+                     onclick="openAnimePage(${animeId}, '${encodeURIComponent(animeTitle)}', '${encodeURIComponent(animeImage)}')">
                     <span style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: #ffd700; font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: bold;">${score}</span>
                     <img src="${animeImage}" alt="${animeTitle}" onerror="this.src='https://via.placeholder.com/150x200?text=No+Image'">
-                    <h3 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size:12px; padding:6px;">${animeTitle}</h3>
-                </a>
+                    <h3 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size:12px; padding:6px; margin:0; color:#fff;">${animeTitle}</h3>
+                </div>
             `;
             container.innerHTML += cardHtml;
         });
@@ -46,6 +48,12 @@ async function fetchGlobalAnime() {
     }
 }
 
+// دالة الانتقال الداخلي الإجبارية لصفحة watch.html الخاصة بك
+function openAnimePage(id, title, img) {
+    window.location.href = `watch.html?id=${id}&title=${title}&img=${img}`;
+}
+
+// إضافة ستايل دوران التحميل
 const style = document.createElement('style');
 style.innerHTML = `@keyframes spin { to { transform: rotate(360deg); } }`;
 document.head.appendChild(style);
