@@ -1,51 +1,55 @@
-// الرابط الخاص بك مع الـ API Key لجلب المباريات الحية الحقيقية لجميع فرق العالم
-const API_URL = "https://api.isportsapi.com/sport/football/livescores?api_key=bM0FDTbtFBDGriGS";
+// الرابط الخاص بك مضافاً إليه السيرفر الوسيط (CORS Proxy) لتخطي حظر المتصفح مجاناً
+const PROXY_URL = "https://api.allorigins.win/raw?url=";
+const REAL_API_URL = "https://api.isportsapi.com/sport/football/livescores?api_key=bM0FDTbtFBDGriGS";
+const FULL_API_URL = PROXY_URL + encodeURIComponent(REAL_API_URL);
 
 async function fetchLiveMatches() {
     const container = document.getElementById('matchesContainer');
     if (!container) return;
 
-    // شاشة تحميل ذكية ومتحركة أثناء جلب المباريات الحقيقية
+    // شاشة تحميل متحركة وأنيقة
     container.innerHTML = `
         <div style="text-align:center; padding:40px; color:var(--text-muted);">
             <i class="fa-solid fa-spinner fa-spin" style="font-size: 30px; color: var(--accent-color); margin-bottom: 10px;"></i>
-            <br>جاري الاتصال بـ iSportsAPI وجلب جميع مباريات العالم الحية...
+            <br>جاري كسر حماية CORS وجلب مباريات العالم الحية الحقيقية...
         </div>`;
 
     try {
-        // الاتصال بالـ API الحقيقي الخاص بك
-        const response = await fetch(API_URL);
+        // الاتصال عبر السيرفر الوسيط المفتوح
+        const response = await fetch(FULL_API_URL);
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const jsonResult = await response.json();
 
-        // التمكين من قراءة البيانات (تعتمد iSportsAPI على مصفوفة داخل الـ data عادةً)
+        // استخراج مصفوفة المباريات (تأتي عادةً في حقل data في iSportsAPI)
         const liveMatches = jsonResult.data || jsonResult;
 
         if (!liveMatches || liveMatches.length === 0) {
-            container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-regular fa-calendar-times"></i> لا توجد مباريات جارية حالياً في هذه اللحظة.</div>`;
+            container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-regular fa-calendar-times"></i> لا توجد مباريات جارية حالياً في هذه اللحظة بالعالم.</div>`;
             return;
         }
 
         container.innerHTML = ""; // تنظيف شاشة التحميل
 
-        // عرض أول 15 مباراة حية ومهمة في العالم لتفادي بطء الشاشة على الهاتف
+        // عرض أول 15 مباراة حية جارية الآن
         liveMatches.slice(0, 15).forEach(match => {
             
-            // استخراج البيانات المحددة من السيرفر (أسماء الفرق، الأهداف، البطولات)
             const homeTeam = match.homeName || "فريق مستضيف";
             const awayTeam = match.awayName || "فريق ضيف";
             const homeScore = match.homeScore !== undefined ? match.homeScore : 0;
             const awayScore = match.awayScore !== undefined ? match.awayScore : 0;
             const leagueName = match.leagueName || "بطولة عالمية";
             
-            // توليد شعارات فرق ذكية تلقائياً بناءً على معرف الفريق من السيرفر أو علم افتراضي بديل
+            // استخدام أعلام الدول أو شعارات افتراضية ذكية في حال لم يوفر الـ API شعاراً سريعاً
             const homeLogo = match.homeIcon ? match.homeIcon : `https://flagcdn.com/w160/un.png`;
             const awayLogo = match.awayIcon ? match.awayIcon : `https://flagcdn.com/w160/un.png`;
 
-            // تحديد حالة المباراة المباشرة والوقت الحقيقي (مثلاً: الشوط الأول، الدقيقة 65)
+            // تحديد توقيت وحالة الشوط الحالي حياً
             let matchStatusText = "مباشر الآن";
-            if (match.status === 1) matchStatusText = "الشوط 1";
-            if (match.status === 2) matchStatusText = "استراحة";
-            if (match.status === 3) matchStatusText = "الشوط 2";
+            if (match.status === 1) matchStatusText = "الشوط الأول";
+            if (match.status === 2) matchStatusText = "إستراحة";
+            if (match.status === 3) matchStatusText = "الشوط الثاني";
             
             const cardHtml = `
                 <a href="watch.html?id=${match.matchId || match.id}&home=${encodeURIComponent(homeTeam)}&away=${encodeURIComponent(awayTeam)}" class="match-card" style="border-left: 4px solid #ff3838;">
@@ -77,11 +81,11 @@ async function fetchLiveMatches() {
         container.innerHTML = `
             <div style="text-align:center; padding:30px; color:#ff3838;">
                 <i class="fa-solid fa-triangle-exclamation" style="font-size:24px;"></i>
-                <br><br>السيرفر لا يزال يقوم بتفعيل الـ API Key الجديد الخاص بك...
-                <br><span style="font-size:11px; color:var(--text-muted);">تأكد من تفعيل الحساب أو انتظر بضع دقائق ليشتغل تلقائياً.</span>
+                <br><br>عذراً، الـ API Key المجاني قد يكون في مرحلة المراجعة والتنشيط من موقع iSportsAPI.
+                <br><span style="font-size:11px; color:var(--text-muted);">تأكد من تفعيل بريدك الإلكتروني في حساب iSportsAPI الخاص بك ليفتح السيرفر البيانات فوراً.</span>
             </div>`;
     }
 }
 
-// بدء التشغيل فور فتح الصفحة
+// بدء التشغيل
 document.addEventListener('DOMContentLoaded', fetchLiveMatches);
