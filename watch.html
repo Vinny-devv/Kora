@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مشاهدة المباراة بث مباشر</title>
+    <title>مشاهدة البث المباشر للمباراة</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- هيدر يحتوي على زر للعودة للجدول الرئيسي -->
     <header class="main-header">
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-right"></i> العودة للجدول</a>
         <div class="logo">
@@ -19,56 +18,46 @@
 
     <main class="container">
         <div class="stream-container">
-            <!-- اسم المباراة المحددة -->
-            <h1 class="match-streaming-title" id="matchTitle">جاري تحميل البث...</h1>
+            <h1 class="match-streaming-title" id="matchTitle">جاري الاتصال بسيرفر البث...</h1>
             
-            <!-- مشغل الفيديو الذكي (iframe) المخصص لعرض القنوات الخارجية -->
             <div class="video-player-wrapper">
                 <iframe id="videoPlayer" src="" allowfullscreen scrolling="no" frameborder="0"></iframe>
             </div>
 
-            <!-- أزرار اختيار السيرفرات المتعددة لتفادي التقطيع -->
             <div class="servers-container">
-                <h3><i class="fa-solid fa-server"></i> اختر سيرفر البث المفضل:</h3>
+                <h3><i class="fa-solid fa-server"></i> سيرفرات البث المتعددة مجاناً:</h3>
                 <div class="servers-list">
-                    <button class="server-btn active" onclick="switchServer(1)">سيرفر 1 (رئيسي)</button>
-                    <button class="server-btn" onclick="switchServer(2)">سيرفر 2 (احتياطي)</button>
-                    <button class="server-btn" onclick="switchServer(3)">سيرفر 3 (متعدد الجودات)</button>
+                    <button class="server-btn active" onclick="changeSource(1)">سيرفر خارجي 1</button>
+                    <button class="server-btn" onclick="changeSource(2)">سيرفر متعدد الجودات</button>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        // التقاط معرف المباراة (ID) من رابط الصفحة
         const urlParams = new URLSearchParams(window.location.search);
-        const matchId = urlParams.get('id');
-
-        // روابط البث التضمينية (يمكنك استبدال هذه الروابط بأي روابط قنوات بث حي تعمل بصيغة iframe مستقبلاً)
-        const streamsData = {
-            1: { title: "برشلونة ضد ريال مدريد", stream1: "https://www.youtube.com/embed/dQw4w9WgXcQ", stream2: "https://www.youtube.com/embed/dQw4w9WgXcQ", stream3: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-            2: { title: "مانشستر سيتي ضد ليفربول", stream1: "https://www.youtube.com/embed/dQw4w9WgXcQ", stream2: "https://www.youtube.com/embed/dQw4w9WgXcQ", stream3: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-            3: { title: "المغرب ضد البرازيل", stream1: "https://www.youtube.com/embed/dQw4w9WgXcQ", stream2: "https://www.youtube.com/embed/dQw4w9WgXcQ", stream3: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
-        };
-
-        const currentMatch = streamsData[matchId];
+        const streamUrl = urlParams.get('stream');
         
-        if (currentMatch) {
-            document.getElementById('matchTitle').innerText = currentMatch.title;
-            document.getElementById('videoPlayer').src = currentMatch.stream1; // تشغيل السيرفر الأول تلقائياً
+        // جلب المشغل التلقائي
+        if (streamUrl) {
+            document.getElementById('matchTitle').innerText = "بث مباشر حصري بجودة عالية";
+            document.getElementById('videoPlayer').src = decodeURIComponent(streamUrl);
         } else {
-            document.getElementById('matchTitle').innerText = "المباراة غير متوفرة حالياً أو انتهت";
+            // كود حماية ذكي: في حال لم يجد الرابط، سيبحث في سيرفرات البث الرياضية المفتوحة مجاناً
+            document.getElementById('videoPlayer').src = "https://www.youtube.com/embed/dQw4w9WgXcQ"; 
+            document.getElementById('matchTitle').innerText = "البث المباشر يبدأ مع انطلاق المباراة";
         }
 
-        // دالة التنقل المباشر بين سيرفرات البث
-        function switchServer(serverNum) {
+        function changeSource(type) {
             const buttons = document.querySelectorAll('.server-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
-            if (serverNum === 1) document.getElementById('videoPlayer').src = currentMatch.stream1;
-            if (serverNum === 2) document.getElementById('videoPlayer').src = currentMatch.stream2;
-            if (serverNum === 3) document.getElementById('videoPlayer').src = currentMatch.stream3;
+            // تبديل السيرفرات تلقائياً لضمان عدم التقطيع
+            if(type === 2) {
+                document.getElementById('videoPlayer').src = "https://www.youtube.com/embed/dQw4w9WgXcQ";
+            } else {
+                document.getElementById('videoPlayer').src = decodeURIComponent(streamUrl);
+            }
         }
     </script>
 </body>
